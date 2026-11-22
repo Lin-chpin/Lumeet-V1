@@ -103,7 +103,7 @@
         </svg>
       </div>
       <span class="text-[11px] tracking-[0.3em] font-semibold text-[#80766c] uppercase">VIDEO STREAM</span>
-      <button id="btn-start" type="button" class="mt-5 min-h-11 px-6 rounded-full bg-white/15 active:bg-white/25 border border-white/15 backdrop-blur-md text-sm font-semibold text-[#f5f0ea] active:scale-95 transition">開始視訊</button>
+      <button id="btn-start" type="button" class="mt-5 min-h-11 px-6 rounded-full bg-white/15 active:bg-white/25 border border-white/15 backdrop-blur-md text-sm font-semibold text-[#f5f0ea] active:scale-95 transition">開始通話</button>
       </div>
     </div>
 
@@ -138,7 +138,7 @@
       <!-- 三、右上角自拍小視窗 (100x140px，圓角 16px) -->
       <aside class="absolute top-[calc(max(16px,env(safe-area-inset-top,47px))+54px)] right-4 flex flex-col items-center gap-1.5 pointer-events-auto">
         <div id="self-cam" class="w-[100px] h-[140px] rounded-[16px] bg-[#221f1d]/90 border border-white/10 shadow-[0_8px_20px_rgba(0,0,0,0.5)] overflow-hidden relative flex flex-col items-center justify-center p-2 text-center">
-          <video id="self-video" class="absolute inset-0 w-full h-full object-cover scale-x-[-1] is-hidden" autoplay muted playsinline></video>
+          <video id="self-video" class="absolute inset-0 w-full h-full object-cover is-hidden" autoplay muted playsinline></video>
           <svg class="w-5 h-5 text-[#857b72] mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
@@ -148,9 +148,26 @@
         <!-- 自拍狀態容器（內容留空） -->
         <div id="self-cam-status" class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-sm border border-white/5 empty:hidden text-[10px] font-medium text-[#d9d3cb]"></div>
 
+        <button id="btn-open-cam" type="button" class="px-2.5 py-1 min-h-[36px] rounded-full bg-[#2f2926]/90 active:bg-[#3d3632] border border-white/10 text-[11px] text-[#d6cfc7] font-medium backdrop-blur-md shadow-sm active:scale-95 transition-all" aria-label="打開攝像頭">
+          打開攝像頭
+        </button>
+
         <!-- 暫停鏡頭按鈕 -->
-        <button id="btn-pause-cam" class="px-2.5 py-1 min-h-[30px] rounded-full bg-[#2f2926]/90 active:bg-[#3d3632] border border-white/10 text-[11px] text-[#d6cfc7] font-medium backdrop-blur-md shadow-sm active:scale-95 transition-all">
+        <button id="btn-pause-cam" type="button" disabled class="px-2.5 py-1 min-h-[30px] rounded-full bg-[#2f2926]/90 active:bg-[#3d3632] border border-white/10 text-[11px] text-[#d6cfc7] font-medium backdrop-blur-md shadow-sm active:scale-95 transition-all disabled:opacity-40 disabled:pointer-events-none">
           暫停讓他看
+        </button>
+      </aside>
+
+      <aside id="screen-share-controls" class="is-hidden absolute top-[calc(max(16px,env(safe-area-inset-top,47px))+54px)] left-4 flex flex-col items-center gap-1.5 pointer-events-auto">
+        <div id="screen-share-preview" class="is-hidden flex flex-col items-center gap-1.5">
+          <div class="w-[120px] h-[80px] rounded-[16px] bg-[#221f1d]/90 border border-white/10 shadow-[0_8px_20px_rgba(0,0,0,0.5)] overflow-hidden relative">
+            <video id="screen-video" class="absolute inset-0 w-full h-full object-contain bg-black/40 is-hidden" autoplay muted playsinline></video>
+            <img id="screen-image" class="absolute inset-0 w-full h-full object-contain bg-black/40 is-hidden" alt="屏幕共享预览">
+          </div>
+          <div id="screen-share-status" class="px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-sm border border-white/5 text-[10px] font-medium text-[#d9d3cb]">屏幕共享</div>
+        </div>
+        <button id="btn-share-screen" type="button" disabled class="px-2.5 py-1 min-h-[36px] rounded-full bg-[#2f2926]/90 active:bg-[#3d3632] border border-white/10 text-[11px] text-[#d6cfc7] font-medium backdrop-blur-md shadow-sm active:scale-95 transition-all disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" aria-label="共享屏幕">
+          共享屏幕
         </button>
       </aside>
 
@@ -159,6 +176,18 @@
 
         <!-- 四、字幕（預設 hidden，內容留空，最多兩行截斷） -->
         <div id="subtitle" class="hidden mb-3 mx-4 px-4 py-2.5 rounded-2xl capsule-glass shadow-[0_6px_20px_rgba(0,0,0,0.4)] max-w-[340px] text-center line-clamp-2 text-[13px] leading-[1.4] text-[#f7f2ed] font-medium tracking-wide"></div>
+
+        <aside id="visual-round-panel" class="is-hidden mb-3 mx-4 w-full max-w-[340px] rounded-2xl bg-black/55 backdrop-blur-md border border-white/10 p-2 shadow-lg" aria-live="polite" aria-label="本轮截图状态">
+          <div class="flex items-center gap-3">
+            <div id="visual-round-preview" class="w-24 h-16 shrink-0 rounded-xl bg-black/70 overflow-hidden border border-white/10">
+              <img id="visual-round-thumbnail" class="w-full h-full object-contain" alt="本轮待发送截图">
+            </div>
+            <div class="min-w-0 flex-1">
+              <div id="visual-round-status" class="text-[12px] font-medium text-[#eee7e0]">正在截图</div>
+              <button id="btn-retry-visual" type="button" class="is-hidden mt-1 text-[11px] text-amber-200 underline underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white" aria-label="重试发送本轮截图">重试发送</button>
+            </div>
+          </div>
+        </aside>
 
         <!-- 五、底部控制面板（毛玻璃材質，上緣圓角 28px） -->
         <footer class="w-full control-glass rounded-t-[28px] pt-3 px-3.5 flex flex-col gap-3 shadow-[0_-8px_32px_rgba(0,0,0,0.5)]" style="padding-bottom: max(16px, env(safe-area-inset-bottom, 34px));">
@@ -189,7 +218,7 @@
             </button>
 
             <!-- 切換鏡頭 -->
-            <button id="btn-switch-cam" class="flex flex-col items-center gap-1 group outline-none min-w-[52px]" aria-label="切換鏡頭">
+            <button id="btn-switch-cam" type="button" disabled class="flex flex-col items-center gap-1 group outline-none min-w-[52px] disabled:opacity-40 disabled:pointer-events-none" aria-label="切換鏡頭">
               <div class="w-[52px] h-[52px] rounded-full bg-[#2a2422]/90 group-active:bg-[#3d3531] border border-white/10 flex items-center justify-center text-[#ded8d0] transition-transform active:scale-95 shadow-sm">
                 <svg class="w-6 h-6 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
@@ -198,14 +227,15 @@
               <span class="text-[11px] font-medium text-[#b0a79e] group-hover:text-[#ded8d0]">切換鏡頭</span>
             </button>
 
-            <!-- 打字 -->
-            <button id="btn-type" class="flex flex-col items-center gap-1 group outline-none min-w-[52px]" aria-label="打字">
+            <!-- 拍照給 AI -->
+            <button id="btn-send-frame" type="button" class="flex flex-col items-center gap-1 group outline-none min-w-[70px]" aria-label="拍一張給他看">
               <div class="w-[52px] h-[52px] rounded-full bg-[#2a2422]/90 group-active:bg-[#3d3531] border border-white/10 flex items-center justify-center text-[#ded8d0] transition-transform active:scale-95 shadow-sm">
                 <svg class="w-6 h-6 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 7a2 2 0 012-2h2l1.5-2h5L16 5h2a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7z"/>
+                  <circle cx="12" cy="12" r="3.5"/>
                 </svg>
               </div>
-              <span class="text-[11px] font-medium text-[#b0a79e] group-hover:text-[#ded8d0]">打字</span>
+              <span id="send-frame-label" class="text-[11px] leading-tight text-center font-medium text-[#b0a79e] group-hover:text-[#ded8d0]">拍一張給他看</span>
             </button>
 
             <!-- 打斷（抬手掌圖示） -->
@@ -226,16 +256,6 @@
                 </svg>
               </div>
               <span class="text-[11px] font-medium text-[#b0a79e] group-hover:text-[#ded8d0]">結束</span>
-            </button>
-          </div>
-
-          <!-- 3. 輸入框區 -->
-          <div id="input-row" class="w-full relative flex items-center">
-            <input id="input-say" type="text" placeholder="說點什麼⋯⋯" class="w-full h-11 pl-4 pr-12 rounded-full bg-[#241f1c]/90 border border-white/10 text-[13px] text-[#f2ede7] placeholder-[#877c72] focus:outline-none focus:border-[#a89b8f] focus:ring-1 focus:ring-[#a89b8f] transition" />
-            <button id="btn-send" class="absolute right-1.5 w-8 h-8 rounded-full bg-[#3d3530] active:bg-[#524842] flex items-center justify-center text-[#d1c8bf] active:scale-95 transition" aria-label="發送">
-              <svg class="w-4 h-4 translate-x-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-              </svg>
             </button>
           </div>
 
@@ -267,11 +287,12 @@
   <div id="settings-sheet" class="is-hidden fixed inset-0 z-50 bg-black/55 backdrop-blur-sm flex items-end md:items-center justify-center p-3" role="dialog" aria-modal="true" aria-labelledby="settings-title">
     <section class="w-full max-w-[366px] max-h-sheet overflow-y-auto overscroll-contain rounded-[28px] bg-[#211d1b]/95 border border-white/10 p-5 shadow-2xl">
       <div class="flex items-center justify-between mb-4">
-        <h2 id="settings-title" class="serif-title text-lg font-semibold">視訊設定</h2>
+        <h2 id="settings-title" class="serif-title text-lg font-semibold">通話設定</h2>
         <button id="btn-close-settings" type="button" class="w-11 h-11 rounded-full bg-white/10 text-xl" aria-label="關閉設定">×</button>
       </div>
       <!-- Vivix -->
       <p class="text-[11px] font-semibold text-[#d6cfc7] tracking-wider uppercase mb-2 mt-1">Vivix</p>
+      <p class="text-[11px] text-[#8f857d] mb-2">選填，只用於角色即時影像；留空也能用靜態角色圖進行語音通話。</p>
       <label class="block text-xs text-[#bdb3aa] mb-1" for="cfg-vivix-key">API Key</label>
       <input id="cfg-vivix-key" type="password" autocomplete="off" class="w-full h-11 rounded-xl bg-black/20 border-white/10 text-sm mb-3" placeholder="vx-...">
 
@@ -312,6 +333,8 @@
         <option value="eleven_flash_v2_5">Flash v2.5（強制中文，最快）</option>
         <option value="eleven_multilingual_v2">Multilingual v2（自動判斷語言）</option>
         <option value="eleven_v3">v3（最自然，比較慢）</option>
+        <option value="eleven_v4">v4（自然對話）</option>
+        <option value="eleven_v4_turbo">v4 Turbo（回應更快）</option>
       </select>
       </div>
       <div id="tts-moss" class="is-hidden">
@@ -384,17 +407,25 @@
 
       <!-- 語音辨識 -->
       <p class="text-[11px] font-semibold text-[#d6cfc7] tracking-wider uppercase mb-2">語音辨識（選填）</p>
-      <p class="text-[11px] text-[#8f857d] mb-2">不填就只能打字。Groq、OpenAI 的 Whisper 都可以；中國大陸請用硅基流動（不用翻牆，SenseVoice 模型免費）。</p>
-      <div class="flex gap-2 mb-2">
-        <button type="button" data-stt-preset="groq" class="flex-1 h-9 rounded-full bg-white/10 active:bg-white/20 border border-white/10 text-xs text-[#eee7e0]">Groq</button>
-        <button type="button" data-stt-preset="siliconflow" class="flex-1 h-9 rounded-full bg-white/10 active:bg-white/20 border border-white/10 text-xs text-[#eee7e0]">硅基流動（大陸）</button>
+      <p class="text-[11px] text-[#8f857d] mb-2">不填就無法用說話傳訊息；通話中可按「拍一張給他看」單獨傳照片（MCP 模式）。</p>
+      <label class="block text-xs text-[#bdb3aa] mb-1" for="cfg-stt-provider">語音辨識服務</label>
+      <select id="cfg-stt-provider" class="w-full h-11 rounded-xl bg-black/20 border-white/10 text-sm mb-2">
+        <option value="openai">OpenAI 相容服務</option>
+        <option value="elevenlabs">ElevenLabs Scribe v2 Realtime</option>
+      </select>
+      <div id="stt-openai-presets" class="flex gap-2 mb-2">
+        <button id="stt-preset-groq" type="button" data-stt-preset="groq" class="flex-1 h-9 rounded-full bg-white/10 active:bg-white/20 border border-white/10 text-xs text-[#eee7e0]">Groq</button>
+        <button id="stt-preset-siliconflow" type="button" data-stt-preset="siliconflow" class="flex-1 h-9 rounded-full bg-white/10 active:bg-white/20 border border-white/10 text-xs text-[#eee7e0]">硅基流動（大陸）</button>
       </div>
-      <label class="block text-xs text-[#bdb3aa] mb-1" for="cfg-stt-base">Base URL</label>
-      <input id="cfg-stt-base" type="url" autocomplete="off" class="w-full h-11 rounded-xl bg-black/20 border-white/10 text-sm mb-2" placeholder="例：https://api.groq.com/openai/v1">
-      <label class="block text-xs text-[#bdb3aa] mb-1" for="cfg-stt-key">API Key</label>
+      <div id="stt-openai">
+        <label class="block text-xs text-[#bdb3aa] mb-1" for="cfg-stt-base">Base URL</label>
+        <input id="cfg-stt-base" type="url" autocomplete="off" class="w-full h-11 rounded-xl bg-black/20 border-white/10 text-sm mb-2" placeholder="例：https://api.groq.com/openai/v1">
+        <label class="block text-xs text-[#bdb3aa] mb-1" for="cfg-stt-model">Model</label>
+        <input id="cfg-stt-model" type="text" autocomplete="off" class="w-full h-11 rounded-xl bg-black/20 border-white/10 text-sm mb-3" placeholder="whisper-large-v3-turbo">
+      </div>
+      <p id="stt-elevenlabs-hint" class="text-[11px] text-[#8f857d] mb-2">Scribe v2 即時辨識。可在下方填 ElevenLabs Key，也可留空共用上方的 ElevenLabs TTS Key。</p>
+      <label id="cfg-stt-key-label" class="block text-xs text-[#bdb3aa] mb-1" for="cfg-stt-key">API Key</label>
       <input id="cfg-stt-key" type="password" autocomplete="off" class="w-full h-11 rounded-xl bg-black/20 border-white/10 text-sm mb-2" placeholder="gsk_... / sk-...">
-      <label class="block text-xs text-[#bdb3aa] mb-1" for="cfg-stt-model">Model</label>
-      <input id="cfg-stt-model" type="text" autocomplete="off" class="w-full h-11 rounded-xl bg-black/20 border-white/10 text-sm mb-3" placeholder="whisper-large-v3-turbo">
 
       <!-- 角色 -->
       <p class="text-[11px] font-semibold text-[#d6cfc7] tracking-wider uppercase mb-2">角色</p>

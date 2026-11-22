@@ -9,8 +9,8 @@ Lumeet｜见你 使用教程
 
 一、要先申请的东西（网址都在这里）
 --------------------------------
-必备：
-  Vivix（让他的脸动起来）       https://vivix.ai
+选填：
+  Vivix（让角色实时影像动起来） https://vivix.ai
 
 二选一（他的大脑）：
   A. 直接 API（国内能用，最简单）
@@ -22,20 +22,20 @@ Lumeet｜见你 使用教程
      Cloudflare（免费）         https://dash.cloudflare.com
      Node.js（电脑要装）         https://nodejs.org
 
-选填：
-  ElevenLabs（更好听的声音，国内不能用）  https://elevenlabs.io
+其他选填：
+  ElevenLabs（语音识别／更好听的声音，国内不能用） https://elevenlabs.io
   Groq（语音识别，要能连国外）          https://console.groq.com
 
 
 二、设置怎么填（点右上角「设置」，从上往下）
 --------------------------------
-1. Vivix API Key：填你在 Vivix 申请的 Key
+1. Vivix API Key（选填）：填入时使用角色实时影像；留空也能用静态角色图通话
 
 2. 声音：
-   - 有 ElevenLabs：填 ElevenLabs 的 API Key 和音色 ID（Voice ID）
-   - 没有：这两格空着，用 Vivix 内建的声音，下拉选一个就好
+   - 有 ElevenLabs：填 API Key 和音色 ID（Voice ID）；v4 和 v4 Turbo 可选
+   - 不接 Vivix：默认使用设备语音，也可以配置下方的 TTS 服务
 
-3. 语音模型：不用动
+3. 语音模型：默认即可；ElevenLabs 用户也可选 v4 或 v4 Turbo
 
 4. 发音修正：先不用填。听到哪个字念得怪，再一行一个这样填：
      你=拟
@@ -53,10 +53,9 @@ Lumeet｜见你 使用教程
        桥接密码  填进「桥接密码」（就是部署时那一组）
        再把 MCP 网址加进你的 AI 的连接器
 
-6. 语音识别（选填，会慢一点；不填就只能打字）：
-     第一行 Base URL：https://api.groq.com/openai/v1
-     第二行 API Key：填 Groq 的 Key
-     第三行 Model：whisper-large-v3-turbo
+6. 语音识别（选填，会慢一点；不填就无法通过说话发送消息）：
+     选 ElevenLabs Scribe v2 Realtime 可直接用 ElevenLabs Key（可共用上方 Key）
+     也可选 Groq，再填 Base URL：https://api.groq.com/openai/v1、API Key 和 Model：whisper-large-v3-turbo
 
 7. 角色名称：填你家小机的名字
 
@@ -67,7 +66,8 @@ Lumeet｜见你 使用教程
    - 用 MCP 桥接的：直接按「从装置上传」选照片
    - 用直接 API 的：填一个公开的图片网址（浏览器直接打开就看得到图的那种）
 
-填完按「保存」，回主画面按「开始视讯」。
+填完按「保存」，回主画面按「开始通话」；不填 Vivix 也能使用。
+通话中可按「打開攝像頭」，再按「拍一張給他看」；也可按「共享屏幕」后按「发送屏幕画面」。一轮最多累计 10 张截图，识别到语音就把文字和图片一起发送；没有语音时静默 5 秒后发送默认看图问题（需要 MCP 桥接）。普通说话不会自动附带画面；屏幕截图不写入长期记忆。
 
 
 三、遇到问题
